@@ -38,6 +38,23 @@ class Cookie
     }
 
     /**
+     * Get the cookie's duration as human-readable text.
+     */
+    public function getFormattedDuration(): string
+    {
+        $factors = \Carbon\CarbonInterval::getCascadeFactors();
+        $factors['years'] = [365, 'dayz'];
+        \Carbon\CarbonInterval::setCascadeFactors($factors);
+
+        $formatted = \Carbon\CarbonInterval::minutes($this->duration)->cascade();
+
+        // Reset cascade factors to defaults
+        \Carbon\CarbonInterval::setCascadeFactors(\Carbon\CarbonInterval::getDefaultCascadeFactors());
+
+        return $formatted;
+    }
+
+    /**
      * Set an attribute dynamically.
      */
     public function __call(string $method, array $arguments): static
